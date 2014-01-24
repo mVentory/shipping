@@ -138,7 +138,9 @@ class Webshopapps_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
             }
 
             $select->where('website_id=?', $request->getWebsiteId());
-            $select->where('filter IN (?)', $request->getData('filter'));
+
+            if ($filter = $request->getData('filter'))
+                $select->where('filter IN (?)', $filter);
 
             $select->order('dest_country_id DESC');
             $select->order('dest_region_id DESC');
