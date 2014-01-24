@@ -138,6 +138,7 @@ class Webshopapps_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
             }
 
             $select->where('website_id=?', $request->getWebsiteId());
+            $select->where('filter IN (?)', $request->getData('filter'));
 
             $select->order('dest_country_id DESC');
             $select->order('dest_region_id DESC');
@@ -258,7 +259,7 @@ class Webshopapps_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
                             $regionId = $regionCodesToIds[$countryCodesToIds[$csvLine[0]]][$csvLine[1]];
                         }
 
-                        if (count($csvLine)==9) {
+                        if (count($csvLine)==10) {
                             // we are searching for postcodes in ranges & including cities
                             if ($csvLine[2] == '*' || $csvLine[2] == '') {
                                 $city = '';
@@ -290,7 +291,7 @@ class Webshopapps_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
                                 $csvLine[6] = (float) $csvLine[6];
                             }
 
-                            $data[] = array('website_id'=>$websiteId, 'dest_country_id'=>$countryId, 'dest_region_id'=>$regionId, 'dest_city'=>$city, 'dest_zip'=>$zip, 'dest_zip_to'=>$zip_to, 'condition_name'=>$conditionName, 'condition_from_value'=>$csvLine[5],'condition_to_value'=>$csvLine[6], 'price'=>$csvLine[7], 'delivery_type'=>$csvLine[8]);
+                            $data[] = array('website_id'=>$websiteId, 'dest_country_id'=>$countryId, 'dest_region_id'=>$regionId, 'dest_city'=>$city, 'dest_zip'=>$zip, 'dest_zip_to'=>$zip_to, 'condition_name'=>$conditionName, 'condition_from_value'=>$csvLine[5],'condition_to_value'=>$csvLine[6], 'price'=>$csvLine[7], 'delivery_type'=>$csvLine[8], 'filter'=>$csvLine[9]);
 
                         } else {
 
@@ -334,7 +335,7 @@ class Webshopapps_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
                         try {
                            $connection->insert($table, $dataLine);
                         } catch (Exception $e) {
-                            $exceptions[] = Mage::helper('shipping')->__('Duplicate Row #%s (Country "%s", Region/State "%s", City "%s", Zip From "%s", Zip To "%s", Delivery Type "%s", Value From "%s" and Value To "%s")', ($k+1), $dataDetails[$k]['country'], $dataDetails[$k]['region'], $dataLine['dest_city'], $dataLine['dest_zip'],  $dataLine['dest_zip_to'], $dataLine['delivery_type'], $dataLine['condition_from_value'], $dataLine['condition_to_value']);
+                            $exceptions[] = Mage::helper('shipping')->__('Duplicate Row #%s (Country "%s", Region/State "%s", City "%s", Zip From "%s", Zip To "%s", Delivery Type "%s", Filter "%s", Value From "%s" and Value To "%s")', ($k+1), $dataDetails[$k]['country'], $dataDetails[$k]['region'], $dataLine['dest_city'], $dataLine['dest_zip'],  $dataLine['dest_zip_to'], $dataLine['delivery_type'], $dataLine['filter'], $dataLine['condition_from_value'], $dataLine['condition_to_value']);
                         }
                     }
                 }

@@ -99,6 +99,13 @@ class Webshopapps_Matrixrate_Model_Carrier_Matrixrate
             $request->setMRConditionName($this->getConfigData('condition_name') ? $this->getConfigData('condition_name') : $this->_default_condition_name);
         }
 
+        if (($attributeCode = trim($this->getConfigData('attribute')))
+            && ($items = $request->getAllItems()))
+            $request->setData(
+                'filter',
+                $this->_getFilterValue($items, $attributeCode)
+            );
+
          // Package weight and qty free shipping
         $oldWeight = $request->getPackageWeight();
         $oldQty = $request->getPackageQty();
@@ -208,6 +215,34 @@ class Webshopapps_Matrixrate_Model_Carrier_Matrixrate
         }
 
         return $codes[$type][$code];
+    }
+
+    protected function _getFilterValue ($items, $code) {
+        foreach ($items as $item) {
+            $product = Mage::getModel('catalog/product')
+                ->setStoreId($item->getProduct()->getStoreId())
+                ->load($item->getProduct()->getId());
+
+            $attributes = $product->getAttributes();
+
+            if (!isset($attributes[$code]))
+                continue;
+
+            $value = $attributes[$code]
+                ->getFrontend()
+                ->getValue($product);
+
+            $value = trim($value);
+
+            if ($value == '~')
+                continue;
+
+            $values[] = $value;
+        }
+
+        $values[] = null;
+
+        return $values;
     }
 
 }

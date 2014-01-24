@@ -62,6 +62,11 @@ class Webshopapps_Matrixrate_Block_Adminhtml_Shipping_Carrier_Matrixrate_Grid
             'index'     => 'delivery_type',
         ));
 
+        $this->addColumn('filter', array(
+            'header'    => Mage::helper('adminhtml')->__('Filter'),
+            'index'     => 'filter',
+        ));
+
         return Mage_Adminhtml_Block_Widget_Grid::_prepareColumns();
     }
 

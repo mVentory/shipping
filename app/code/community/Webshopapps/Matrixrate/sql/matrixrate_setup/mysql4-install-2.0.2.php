@@ -20,8 +20,9 @@ CREATE TABLE IF NOT EXISTS {$this->getTable('shipping_matrixrate')} (
   price decimal(12,4) NOT NULL default '0.0000',
   cost decimal(12,4) NOT NULL default '0.0000',
   delivery_type varchar(255) NOT NULL default '',
+  filter varchar(255) default NULL,
   PRIMARY KEY(`pk`),
-  UNIQUE KEY `dest_country` (`website_id`,`dest_country_id`,`dest_region_id`,`dest_city`,`dest_zip`,`dest_zip_to`,`condition_name`,`condition_from_value`,`condition_to_value`,`delivery_type`)
+  UNIQUE KEY `dest_country` (`website_id`,`dest_country_id`,`dest_region_id`,`dest_city`,`dest_zip`,`dest_zip_to`,`condition_name`,`condition_from_value`,`condition_to_value`,`delivery_type`, `filter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
